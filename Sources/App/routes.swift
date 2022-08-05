@@ -2,13 +2,18 @@ import Fluent
 import Vapor
 
 func routes(_ app: Application) throws {
-    app.get { req async in
-        "It works!"
+    
+    app.post("object") { req -> EventLoopFuture<Object> in
+     
+        let object = try req.content.decode(Object.self)
+        return object.create(on: req.db).map {object}
+        
+
+                        
+        }
+    app.get("object"){ req in
+        
+        return "yes"
     }
 
-    app.get("hello") { req async -> String in
-        "Hello, world!"
-    }
-
-    try app.register(collection: TodoController())
 }
