@@ -21,6 +21,7 @@ struct CreateObject: AsyncMigration {
             .field("modified from", .string)
             .field("location", . string)
             .field("barcode", .data)
+            .field("searchTerm", .string)
             .create()
     }
     

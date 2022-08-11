@@ -19,28 +19,31 @@ final class Object: Model, Content{
     var name: String
     
     @Field(key: "text")
-    var text: String
+    var text: String?
     
     @Field(key: "description")
-    var description: String
+    var description: String?
     
     @Field(key: "created at")
-    var createdAt: Date
+    var createdAt: Date?
     
     @Field(key: "created from")
-    var createdFrom: String
+    var createdFrom: String?
     
     @Field(key: "modified from")
-    var modifiedFrom: String
+    var modifiedFrom: String?
     
     @Field(key: "modified at")
-    var modifiedAt: Date
+    var modifiedAt: Date?
     
     @Field(key: "location")
-    var location: String
+    var location: String?
     
     @Field(key: "barcode")
-    var barcode: String
+    var barcode: String?
+    
+    @Field(key: "searchTerm")
+    var searchTerm: String?
     
     init() {}
     init(id: UUID? = nil, name: String){
@@ -54,5 +57,6 @@ final class Object: Model, Content{
         self.modifiedFrom = modifiedFrom
         self.location = location
         self.barcode = barcode
+        self.searchTerm = searchTerm
     }
 }
