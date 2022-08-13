@@ -16,8 +16,10 @@ struct ObjectController: RouteCollection{
         objects.post(use:createObject)
         objects.put(use:updateObject)
         objects.get(":objectId", use:findObject)
-        objects.delete(use:deleteObject)
-            objects.get("search",":searchName",use:findObjectWithName)
+        objects.delete(":objectId", use:deleteObject)
+        objects.get("search",":searchName",use:findObjectWithName)
+        objects.get("searchLocation",":searchLocation", use: findObjectByLocation)
+            
             
         
     }
@@ -38,7 +40,7 @@ func index(req: Request) throws -> EventLoopFuture<[Object]> {
         return Object.find(req.parameters.get("objectId"),on:req.db)
         .unwrap(or: Abort(.notFound))
         }
-}
+
 
 func updateObject(req:Request) throws -> EventLoopFuture<HTTPStatus>{
     let object = try req.content.decode(Object.self)
@@ -61,6 +63,14 @@ func findObjectWithName(req:Request) throws -> EventLoopFuture<[Object]> {
         .filter(\.$searchTerm ~~ req.parameters.get("searchName")!)
         .sort(\.$name)
         .all()
-        
 }
 
+func findObjectByLocation(req:Request) throws -> EventLoopFuture<[Object]> {
+    
+    return Object.query(on: req.db)
+        .filter(\.$location ~~ req.parameters.get("searchLocation")!)
+        .sort(\.$name)
+        .all()
+}
+
+}
