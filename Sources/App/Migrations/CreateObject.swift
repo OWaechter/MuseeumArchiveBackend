@@ -7,7 +7,6 @@
 
 import Fluent
 import Vapor
-import CoreImage.CIFilterBuiltins
 
 struct CreateObject: AsyncMigration {
     func prepare(on database: Database) async throws {
