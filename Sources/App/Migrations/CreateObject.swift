@@ -7,6 +7,7 @@
 
 import Fluent
 import Vapor
+import CoreImage.CIFilterBuiltins
 
 struct CreateObject: AsyncMigration {
     func prepare(on database: Database) async throws {
@@ -20,7 +21,7 @@ struct CreateObject: AsyncMigration {
             .field("created from", .string)
             .field("modified from", .string)
             .field("location", . string)
-            .field("barcode", .data)
+            .field("barcode", .string)
             .field("searchTerm", .string)
             .create()
     }

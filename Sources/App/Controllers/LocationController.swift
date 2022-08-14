@@ -13,13 +13,10 @@ struct LocationController: RouteCollection{
         let locations = routes.grouped("locations")
         locations.group("locations"){ location in
             locations.get(use: locationList)
-            location.post(use: createLocation)
-            location.delete(":locationId", use: deleteLocation)
-            location.put(use: updateLocation)
-            location.get(":locationid", use: findLocation)
-            
-            
-            
+            locations.post(use: createLocation)
+            locations.delete(":locationId", use: deleteLocation)
+            locations.put(use: updateLocation)
+            locations.get(":locationid", use: findLocation)
             
             
         }
@@ -46,7 +43,9 @@ struct LocationController: RouteCollection{
         let location = try req.content.decode(Location.self)
         return Location.find(location.id, on :req.db)
             .unwrap(or: Abort(.notFound))
-            .flatMap{$0.name = location.name
+            .flatMap{
+                $0.name = location.name
+                $0.description = location.description
                 return $0.update(on: req.db).transform(to: .ok)
             }
         

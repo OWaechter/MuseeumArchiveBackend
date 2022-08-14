@@ -26,15 +26,15 @@ struct ObjectController: RouteCollection{
 }
 
 
-func index(req: Request) throws -> EventLoopFuture<[Object]> {
-    return Object.query(on: req.db).all()
-}
+    func index(req: Request) throws -> EventLoopFuture<[Object]> {
+        return Object.query(on: req.db).all()
+    }
 
 
     func createObject(req:Request) throws -> EventLoopFuture<HTTPStatus>{
-    let object = try req.content.decode(Object.self)
-    return object.create(on: req.db).transform(to: .ok)
-}
+        let object = try req.content.decode(Object.self)
+        return object.create(on: req.db).transform(to: .ok)
+    }
 
     func findObject(req:Request) throws -> EventLoopFuture<Object>{
         return Object.find(req.parameters.get("objectId"),on:req.db)
@@ -44,10 +44,19 @@ func index(req: Request) throws -> EventLoopFuture<[Object]> {
 
 func updateObject(req:Request) throws -> EventLoopFuture<HTTPStatus>{
     let object = try req.content.decode(Object.self)
+    let date = Date()
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "dd.MM.YYYY"
     return Object.find(object.id, on: req.db)
         .unwrap(or: Abort(.notFound))
         .flatMap{
             $0.name = object.name
+            $0.location = object.location
+            $0.searchTerm = object.searchTerm?.lowercased()
+            $0.description = object.description
+            $0.modifiedAt = date
+            $0.modifiedFrom = object.modifiedFrom
+            $0.text = object.text
             return $0.update(on: req.db).transform(to: .ok)
         }
 }
@@ -63,7 +72,7 @@ func findObjectWithName(req:Request) throws -> EventLoopFuture<[Object]> {
         .filter(\.$searchTerm ~~ req.parameters.get("searchName")!)
         .sort(\.$name)
         .all()
-}
+    }
 
 func findObjectByLocation(req:Request) throws -> EventLoopFuture<[Object]> {
     
@@ -71,6 +80,6 @@ func findObjectByLocation(req:Request) throws -> EventLoopFuture<[Object]> {
         .filter(\.$location ~~ req.parameters.get("searchLocation")!)
         .sort(\.$name)
         .all()
-}
+    }
 
 }

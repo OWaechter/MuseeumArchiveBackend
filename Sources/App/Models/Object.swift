@@ -56,7 +56,7 @@ final class Object: Model, Content{
         self.modifiedAt = modifiedAt
         self.modifiedFrom = modifiedFrom
         self.location = location
-        self.barcode = barcode
-        self.searchTerm = searchTerm
+        self.barcode = id?.uuidString
+        self.searchTerm = searchTerm?.lowercased()
     }
 }
