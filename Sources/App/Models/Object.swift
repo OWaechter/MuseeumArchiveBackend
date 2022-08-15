@@ -51,12 +51,19 @@ final class Object: Model, Content{
         self.name = name
         self.description = description
         self.text = text
-        self.createdAt = createdAt
+        self.createdAt = getDate()
         self.createdFrom = createdFrom
         self.modifiedAt = modifiedAt
         self.modifiedFrom = modifiedFrom
         self.location = location
         self.barcode = id?.uuidString
         self.searchTerm = searchTerm?.lowercased()
+    }
+    
+    private func getDate() -> Date{
+        let date = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.YYYY"
+        return date
     }
 }
