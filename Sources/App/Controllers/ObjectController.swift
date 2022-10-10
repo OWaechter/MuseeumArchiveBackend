@@ -19,9 +19,6 @@ struct ObjectController: RouteCollection{
         objects.delete(":objectId", use:deleteObject)
         objects.get("search",":searchName",use:findObjectWithName)
         objects.get("searchLocation",":searchLocation", use: findObjectByLocation)
-            
-            
-        
     }
 }
 
@@ -44,9 +41,6 @@ struct ObjectController: RouteCollection{
 
 func updateObject(req:Request) throws -> EventLoopFuture<HTTPStatus>{
     let object = try req.content.decode(Object.self)
-    let date = Date()
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "dd.MM.YYYY"
     return Object.find(object.id, on: req.db)
         .unwrap(or: Abort(.notFound))
         .flatMap{
@@ -54,7 +48,7 @@ func updateObject(req:Request) throws -> EventLoopFuture<HTTPStatus>{
             $0.location = object.location
             $0.searchTerm = object.searchTerm?.lowercased()
             $0.description = object.description
-            $0.modifiedAt = date
+            $0.modifiedAt = getDate()
             $0.modifiedFrom = object.modifiedFrom
             $0.text = object.text
             return $0.update(on: req.db).transform(to: .ok)
@@ -80,6 +74,13 @@ func findObjectByLocation(req:Request) throws -> EventLoopFuture<[Object]> {
         .filter(\.$location ~~ req.parameters.get("searchLocation")!)
         .sort(\.$name)
         .all()
+    }
+    
+    private func getDate() -> Date{
+        let date = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.YYYY"
+        return date
     }
 
 }

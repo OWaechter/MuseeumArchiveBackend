@@ -56,4 +56,5 @@ struct LocationController: RouteCollection{
         return Location.find(req.parameters.get("locationId"), on: req.db)
             .unwrap(or: Abort(.notFound))
     }
+    
 }

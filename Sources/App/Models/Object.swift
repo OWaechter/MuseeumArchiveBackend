@@ -9,7 +9,7 @@ import Fluent
 import Vapor
 
 final class Object: Model, Content{
-    
+
     static let schema = "object"
     
     @ID(key: .id)
@@ -51,7 +51,7 @@ final class Object: Model, Content{
         self.name = name
         self.description = description
         self.text = text
-        self.createdAt = getDate()
+        self.createdAt = createdAt
         self.createdFrom = createdFrom
         self.modifiedAt = modifiedAt
         self.modifiedFrom = modifiedFrom
@@ -60,10 +60,6 @@ final class Object: Model, Content{
         self.searchTerm = searchTerm?.lowercased()
     }
     
-    private func getDate() -> Date{
-        let date = Date()
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM.YYYY"
-        return date
-    }
+   
+    
 }

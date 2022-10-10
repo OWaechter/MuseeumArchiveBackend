@@ -21,7 +21,18 @@ public func configure(_ app: Application) throws {
         password: Environment.get("DATABASE_PASSWORD") ?? "vapor_password",
         database: Environment.get("DATABASE_NAME") ?? "vapor_database"
     ), as: .psql)
+        
     }
+    
+    // using default configuration
+    app.middleware.use(CORSMiddleware(configuration: .default()))
+    
+    // using custom configuration
+    app.middleware.use(CORSMiddleware(configuration: .init(
+        allowedOrigin: .originBased,
+        allowedMethods: [.GET, .POST, .PUT, .OPTIONS, .DELETE, .PATCH],
+        allowedHeaders: [.accept, .authorization, .contentType, .origin, .xRequestedWith]
+    )))
     
     app.migrations.add(CreateObject())
     app.migrations.add(CreateLocation())
